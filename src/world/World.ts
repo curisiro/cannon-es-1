@@ -19,6 +19,35 @@ import type { FrictionEquation } from '../equations/FrictionEquation'
 import type { RayOptions, RaycastCallback } from '../collision/Ray'
 import type { Constraint } from '../constraints/Constraint'
 import type { Shape } from '../shapes/Shape'
+import * as THREE from 'three'
+import { GPUComputationRenderer } from 'three/examples/jsm/misc/GPUComputationRenderer'
+
+const renderer = new THREE.WebGLRenderer()
+
+// Create computation renderer
+const gpuCompute = new GPUComputationRenderer(1024, 1024, renderer)
+const dtPosition = gpuCompute.createTexture()
+const theArray = dtPosition.image.data
+
+const floatArray = new Float32Array([1, 1.02, 10.2, 20.5])
+const uintArray = new Uint8Array(floatArray.buffer)
+console.log(uintArray)
+
+for (let i = 0; i < uintArray.length; i++) {
+  theArray[i] = uintArray[i]
+}
+
+const frag_shader = `
+void main()	{
+
+  vec2 uv = gl_FragCoord.xy / resolution.xy;
+  vec4 tmpPos = texture2D( texturePosition, uv );
+  vec3 position = tmpPos.xyz;
+
+  gl_FragColor = vec4( position, tmpPos.w );
+}`
+
+const positionVariable = gpuCompute.addVariable('texturePosition', frag_shader, dtPosition)
 
 export type WorldOptions = ConstructorParameters<typeof World>[0]
 
