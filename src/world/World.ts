@@ -19,6 +19,7 @@ import type { FrictionEquation } from '../equations/FrictionEquation'
 import type { RayOptions, RaycastCallback } from '../collision/Ray'
 import type { Constraint } from '../constraints/Constraint'
 import type { Shape } from '../shapes/Shape'
+import * as gpu from 'gpu-compute'
 
 export type WorldOptions = ConstructorParameters<typeof World>[0]
 
@@ -455,6 +456,34 @@ export class World extends EventTarget {
    *     world.step(1 / 60)
    */
   step(dt: number, timeSinceLastCalled?: number, maxSubSteps = 10): void {
+    var textureWidth = 4
+
+    // Each texel is packed with two 16bit ints.
+    // This program continuously increments those values using floored coordinates.
+    var source = `
+    #ifdef GL_ES
+    precision mediump float;
+    precision mediump int;
+    precision mediump sampler2D;
+    #endif
+    
+    uniform sampler2D u_gpuData;
+    const float TEXTURE_WIDTH = ${textureWidth}.0;
+    
+    float vec2ToInt16(vec2 v) { return clamp(floor(floor(v.r * 255.0) * 256.0) + floor(v.g * 255.0) - 32767.0, -32767.0, 32768.0); }
+    vec2 int16ToVec2(float f) { f = clamp(f, -32767.0, 32768.0) + 32767.0; return vec2(floor(f / 256.0), f - floor(f / 256.0) * 256.0) / 255.0; }
+    
+    void main() {
+      vec4 texel = texture2D(u_gpuData, gl_FragCoord.xy / TEXTURE_WIDTH);
+      float x = mod(vec2ToInt16(texel.rg) + floor(gl_FragCoord.x), TEXTURE_WIDTH);
+      float y = mod(vec2ToInt16(texel.ba) + floor(gl_FragCoord.y), TEXTURE_WIDTH);
+      gl_FragColor = vec4(int16ToVec2(x), int16ToVec2(y));
+    }`
+
+    // initialize primatives
+    var target = new gpu.RenderTarget(textureWidth)
+    var shader = new gpu.ComputeShader(source)
+
     if (timeSinceLastCalled === undefined) {
       // Fixed, simple stepping
 

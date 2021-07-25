@@ -644,7 +644,7 @@ class Vec3 {
   }
   /**
    * Normalize the vector. Note that this changes the values in the vector.
-    * @return Returns the norm of the vector
+     * @return Returns the norm of the vector
    */
 
 
@@ -9761,7 +9761,7 @@ class Trimesh extends Shape {
         const n = this.vertices.length / 3,
             verts = this.vertices;
         const minx,miny,minz,maxx,maxy,maxz;
-         const v = tempWorldVertex;
+          const v = tempWorldVertex;
         for(let i=0; i<n; i++){
             this.getVertex(i, v);
             quat.vmult(v, v);
@@ -9771,12 +9771,12 @@ class Trimesh extends Shape {
             } else if(v.x > maxx || maxx===undefined){
                 maxx = v.x;
             }
-             if (v.y < miny || miny===undefined){
+              if (v.y < miny || miny===undefined){
                 miny = v.y;
             } else if(v.y > maxy || maxy===undefined){
                 maxy = v.y;
             }
-             if (v.z < minz || minz===undefined){
+              if (v.z < minz || minz===undefined){
                 minz = v.z;
             } else if(v.z > maxz || maxz===undefined){
                 maxz = v.z;
@@ -12161,6 +12161,82 @@ class TupleDictionary {
 
 }
 
+Object.defineProperty(exports, "__esModule", { value: true });
+const context_1 = require("./context");
+const computeShader_1 = require("./computeShader");
+const renderTarget_1 = require("./renderTarget");
+const vectorBoolArray_1 = require("./vectorBoolArray");
+const vectorInt16_1 = require("./vectorInt16");
+const vectorUint16_1 = require("./vectorUint16");
+const functionStrings_1 = require("./functionStrings");
+const biguint_1 = require("./shaders/biguint");
+const bigint_1 = require("./shaders/bigint");
+const state_1 = require("./state");
+module.exports = {
+    setWebGLContext: context_1.setWebGLContext,
+    getWebGLContext: context_1.getWebGLContext,
+    isWebGL2: context_1.isWebGL2,
+    ComputeShader: computeShader_1.ComputeShader,
+    passThruFrag: computeShader_1.passThruFrag,
+    passThruVert: computeShader_1.passThruVert,
+    RenderTarget: renderTarget_1.RenderTarget,
+    packBooleans: vectorBoolArray_1.packBooleans,
+    unpackBooleans: vectorBoolArray_1.unpackBooleans,
+    packInt16: vectorInt16_1.packInt16,
+    unpackInt16: vectorInt16_1.unpackInt16,
+    MIN_INT16: vectorInt16_1.MIN_INT16,
+    MAX_INT16: vectorInt16_1.MAX_INT16,
+    packUint16: vectorUint16_1.packUint16,
+    unpackUint16: vectorUint16_1.unpackUint16,
+    MIN_UINT16: vectorUint16_1.MIN_UINT16,
+    MAX_UINT16: vectorUint16_1.MAX_UINT16,
+    functionStrings: functionStrings_1.functionStrings,
+    replaceDependencies: functionStrings_1.replaceDependencies,
+    decodeUnsignedBytes: biguint_1.decodeUnsignedBytes,
+    encodeUnsignedBytes: biguint_1.encodeUnsignedBytes,
+    decodeSignedBytes: bigint_1.decodeSignedBytes,
+    encodeSignedBytes: bigint_1.encodeSignedBytes,
+    getState: state_1.getState,
+    setState: state_1.setState,
+    resetState: state_1.resetState
+};
+var context_2 = require("./context");
+Object.defineProperty(exports, "setWebGLContext", { enumerable: true, get: function () { return context_2.setWebGLContext; } });
+Object.defineProperty(exports, "getWebGLContext", { enumerable: true, get: function () { return context_2.getWebGLContext; } });
+Object.defineProperty(exports, "isWebGL2", { enumerable: true, get: function () { return context_2.isWebGL2; } });
+var computeShader_2 = require("./computeShader");
+Object.defineProperty(exports, "ComputeShader", { enumerable: true, get: function () { return computeShader_2.ComputeShader; } });
+Object.defineProperty(exports, "passThruFrag", { enumerable: true, get: function () { return computeShader_2.passThruFrag; } });
+Object.defineProperty(exports, "passThruVert", { enumerable: true, get: function () { return computeShader_2.passThruVert; } });
+var renderTarget_2 = require("./renderTarget");
+Object.defineProperty(exports, "RenderTarget", { enumerable: true, get: function () { return renderTarget_2.RenderTarget; } });
+var vectorBoolArray_2 = require("./vectorBoolArray");
+Object.defineProperty(exports, "packBooleans", { enumerable: true, get: function () { return vectorBoolArray_2.packBooleans; } });
+Object.defineProperty(exports, "unpackBooleans", { enumerable: true, get: function () { return vectorBoolArray_2.unpackBooleans; } });
+var vectorInt16_2 = require("./vectorInt16");
+Object.defineProperty(exports, "packInt16", { enumerable: true, get: function () { return vectorInt16_2.packInt16; } });
+Object.defineProperty(exports, "unpackInt16", { enumerable: true, get: function () { return vectorInt16_2.unpackInt16; } });
+Object.defineProperty(exports, "MIN_INT16", { enumerable: true, get: function () { return vectorInt16_2.MIN_INT16; } });
+Object.defineProperty(exports, "MAX_INT16", { enumerable: true, get: function () { return vectorInt16_2.MAX_INT16; } });
+var vectorUint16_2 = require("./vectorUint16");
+Object.defineProperty(exports, "packUint16", { enumerable: true, get: function () { return vectorUint16_2.packUint16; } });
+Object.defineProperty(exports, "unpackUint16", { enumerable: true, get: function () { return vectorUint16_2.unpackUint16; } });
+Object.defineProperty(exports, "MIN_UINT16", { enumerable: true, get: function () { return vectorUint16_2.MIN_UINT16; } });
+Object.defineProperty(exports, "MAX_UINT16", { enumerable: true, get: function () { return vectorUint16_2.MAX_UINT16; } });
+var functionStrings_2 = require("./functionStrings");
+Object.defineProperty(exports, "functionStrings", { enumerable: true, get: function () { return functionStrings_2.functionStrings; } });
+Object.defineProperty(exports, "replaceDependencies", { enumerable: true, get: function () { return functionStrings_2.replaceDependencies; } });
+var biguint_2 = require("./shaders/biguint");
+Object.defineProperty(exports, "decodeUnsignedBytes", { enumerable: true, get: function () { return biguint_2.decodeUnsignedBytes; } });
+Object.defineProperty(exports, "encodeUnsignedBytes", { enumerable: true, get: function () { return biguint_2.encodeUnsignedBytes; } });
+var bigint_2 = require("./shaders/bigint");
+Object.defineProperty(exports, "decodeSignedBytes", { enumerable: true, get: function () { return bigint_2.decodeSignedBytes; } });
+Object.defineProperty(exports, "encodeSignedBytes", { enumerable: true, get: function () { return bigint_2.encodeSignedBytes; } });
+var state_2 = require("./state");
+Object.defineProperty(exports, "getState", { enumerable: true, get: function () { return state_2.getState; } });
+Object.defineProperty(exports, "setState", { enumerable: true, get: function () { return state_2.setState; } });
+Object.defineProperty(exports, "resetState", { enumerable: true, get: function () { return state_2.resetState; } });
+
 /**
  * The physics world
  */
@@ -12581,6 +12657,14 @@ class World extends EventTarget {
 
 
   step(dt, timeSinceLastCalled, maxSubSteps = 10) {
+    var textureWidth = 4; // Each texel is packed with two 16bit ints.
+    // This program continuously increments those values using floored coordinates.
+
+    var source = "\n    #ifdef GL_ES\n    precision mediump float;\n    precision mediump int;\n    precision mediump sampler2D;\n    #endif\n    \n    uniform sampler2D u_gpuData;\n    const float TEXTURE_WIDTH = " + textureWidth + ".0;\n    \n    float vec2ToInt16(vec2 v) { return clamp(floor(floor(v.r * 255.0) * 256.0) + floor(v.g * 255.0) - 32767.0, -32767.0, 32768.0); }\n    vec2 int16ToVec2(float f) { f = clamp(f, -32767.0, 32768.0) + 32767.0; return vec2(floor(f / 256.0), f - floor(f / 256.0) * 256.0) / 255.0; }\n    \n    void main() {\n      vec4 texel = texture2D(u_gpuData, gl_FragCoord.xy / TEXTURE_WIDTH);\n      float x = mod(vec2ToInt16(texel.rg) + floor(gl_FragCoord.x), TEXTURE_WIDTH);\n      float y = mod(vec2ToInt16(texel.ba) + floor(gl_FragCoord.y), TEXTURE_WIDTH);\n      gl_FragColor = vec4(int16ToVec2(x), int16ToVec2(y));\n    }"; // initialize primatives
+
+    new undefined(textureWidth);
+    new undefined(source);
+
     if (timeSinceLastCalled === undefined) {
       // Fixed, simple stepping
       this.internalStep(dt); // Increment time

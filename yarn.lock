@@ -2882,6 +2882,11 @@ globals@^11.1.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
   integrity sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==
 
+gpu-compute@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/gpu-compute/-/gpu-compute-1.2.1.tgz#8ecc76592bbd1bae2fafcb06b30fa0336b2422cb"
+  integrity sha512-sntCzayricjA9Mq+xSJYFD+EpDmCZUzwEga6YFjiuEmVbRpAUrhB0YuCfcFWC5+WQwGe6mTRzsmStfnXSMMUxw==
+
 graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4:
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
