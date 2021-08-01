@@ -1,3 +1,5 @@
+import { GPU } from 'gpu.js/src';
+
 /**
  * Records what objects are colliding with each other
  */
@@ -640,7 +642,7 @@ class Vec3 {
   }
   /**
    * Normalize the vector. Note that this changes the values in the vector.
-    * @return Returns the norm of the vector
+     * @return Returns the norm of the vector
    */
 
 
@@ -5126,21 +5128,21 @@ class Ray {
       direction.scale(scalar, intersectPoint);
       intersectPoint.vadd(from, intersectPoint); // a is the point we compare points b and c with.
 
-      a.copy(vertices[face[0]]);
-      q.vmult(a, a);
-      x.vadd(a, a);
+      a$1.copy(vertices[face[0]]);
+      q.vmult(a$1, a$1);
+      x.vadd(a$1, a$1);
 
       for (let i = 1; !result.shouldStop && i < face.length - 1; i++) {
         // Transform 3 vertices to world coords
-        b.copy(vertices[face[i]]);
-        c.copy(vertices[face[i + 1]]);
-        q.vmult(b, b);
-        q.vmult(c, c);
-        x.vadd(b, b);
-        x.vadd(c, c);
+        b$1.copy(vertices[face[i]]);
+        c$1.copy(vertices[face[i + 1]]);
+        q.vmult(b$1, b$1);
+        q.vmult(c$1, c$1);
+        x.vadd(b$1, b$1);
+        x.vadd(c$1, c$1);
         const distance = intersectPoint.distanceTo(from);
 
-        if (!(Ray.pointInTriangle(intersectPoint, a, b, c) || Ray.pointInTriangle(intersectPoint, b, a, c)) || distance > fromToDistance) {
+        if (!(Ray.pointInTriangle(intersectPoint, a$1, b$1, c$1) || Ray.pointInTriangle(intersectPoint, b$1, a$1, c$1)) || distance > fromToDistance) {
           continue;
         }
 
@@ -5195,9 +5197,9 @@ class Ray {
       // note: this works regardless of the direction of the face normal
       // Get plane point in world coordinates...
 
-      mesh.getVertex(indices[trianglesIndex * 3], a); // ...but make it relative to the ray from. We'll fix this later.
+      mesh.getVertex(indices[trianglesIndex * 3], a$1); // ...but make it relative to the ray from. We'll fix this later.
 
-      a.vsub(localFrom, vector); // If this dot product is negative, we have something interesting
+      a$1.vsub(localFrom, vector); // If this dot product is negative, we have something interesting
 
       const dot = localDirection.dot(normal); // Bail out if ray and plane are parallel
       // if (Math.abs( dot ) < this.precision){
@@ -5215,11 +5217,11 @@ class Ray {
       localDirection.scale(scalar, intersectPoint);
       intersectPoint.vadd(localFrom, intersectPoint); // Get triangle vertices
 
-      mesh.getVertex(indices[trianglesIndex * 3 + 1], b);
-      mesh.getVertex(indices[trianglesIndex * 3 + 2], c);
+      mesh.getVertex(indices[trianglesIndex * 3 + 1], b$1);
+      mesh.getVertex(indices[trianglesIndex * 3 + 2], c$1);
       const squaredDistance = intersectPoint.distanceSquared(localFrom);
 
-      if (!(Ray.pointInTriangle(intersectPoint, b, a, c) || Ray.pointInTriangle(intersectPoint, a, b, c)) || squaredDistance > fromToDistanceSquared) {
+      if (!(Ray.pointInTriangle(intersectPoint, b$1, a$1, c$1) || Ray.pointInTriangle(intersectPoint, a$1, b$1, c$1)) || squaredDistance > fromToDistanceSquared) {
         continue;
       } // transform intersectpoint and normal to world
 
@@ -5306,9 +5308,9 @@ const v2 = new Vec3();
 const intersectBody_xi = new Vec3();
 const intersectBody_qi = new Quaternion();
 const intersectPoint = new Vec3();
-const a = new Vec3();
-const b = new Vec3();
-const c = new Vec3();
+const a$1 = new Vec3();
+const b$1 = new Vec3();
+const c$1 = new Vec3();
 const intersectConvexOptions = {
   faceList: [0]
 };
@@ -9757,7 +9759,7 @@ class Trimesh extends Shape {
         const n = this.vertices.length / 3,
             verts = this.vertices;
         const minx,miny,minz,maxx,maxy,maxz;
-         const v = tempWorldVertex;
+          const v = tempWorldVertex;
         for(let i=0; i<n; i++){
             this.getVertex(i, v);
             quat.vmult(v, v);
@@ -9767,12 +9769,12 @@ class Trimesh extends Shape {
             } else if(v.x > maxx || maxx===undefined){
                 maxx = v.x;
             }
-             if (v.y < miny || miny===undefined){
+              if (v.y < miny || miny===undefined){
                 miny = v.y;
             } else if(v.y > maxy || maxy===undefined){
                 maxy = v.y;
             }
-             if (v.z < minz || minz===undefined){
+              if (v.z < minz || minz===undefined){
                 minz = v.z;
             } else if(v.z > maxz || maxz===undefined){
                 maxz = v.z;
@@ -10307,10 +10309,35 @@ class Vec3Pool extends Pool {
 }
 
 let _COLLISION_TYPES$sphe, _COLLISION_TYPES$sphe2, _COLLISION_TYPES$boxB, _COLLISION_TYPES$sphe3, _COLLISION_TYPES$plan, _COLLISION_TYPES$conv, _COLLISION_TYPES$sphe4, _COLLISION_TYPES$plan2, _COLLISION_TYPES$boxC, _COLLISION_TYPES$sphe5, _COLLISION_TYPES$boxH, _COLLISION_TYPES$conv2, _COLLISION_TYPES$sphe6, _COLLISION_TYPES$plan3, _COLLISION_TYPES$boxP, _COLLISION_TYPES$conv3, _COLLISION_TYPES$cyli, _COLLISION_TYPES$sphe7, _COLLISION_TYPES$plan4, _COLLISION_TYPES$boxC2, _COLLISION_TYPES$conv4, _COLLISION_TYPES$heig, _COLLISION_TYPES$part, _COLLISION_TYPES$sphe8, _COLLISION_TYPES$plan5;
-// Naming rule: based of the order in SHAPE_TYPES,
+const gpu = new GPU();
+const multiplyMatrix = gpu.createKernel(function (a, b) {
+  let sum = 0;
+
+  for (let i = 0; i < 512; i++) {
+    sum += a[this.thread.y][i] * b[i][this.thread.x];
+  }
+
+  return sum;
+}).setOutput([512, 512]);
+let a = Array();
+let b = Array();
+
+for (var i = 0; i < 512; i++) {
+  a.push([]);
+  b.push([]);
+
+  for (var j = 0; j < 512; j++) {
+    a[i].push(1);
+    b[i].push(-1);
+  }
+}
+
+const c = multiplyMatrix(a, b);
+console.log(c); // Naming rule: based of the order in SHAPE_TYPES,
 // the first part of the method is formed by the
 // shape type that comes before, in the second part
 // there is the shape type that comes after in the SHAPE_TYPES list
+
 const COLLISION_TYPES = {
   sphereSphere: Shape.types.SPHERE,
   spherePlane: Shape.types.SPHERE | Shape.types.PLANE,

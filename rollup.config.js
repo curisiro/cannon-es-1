@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import replace from '@rollup/plugin-replace'
 import filesize from 'rollup-plugin-filesize'
+import commonjs from '@rollup/plugin-commonjs'
 
 const extensions = ['.ts']
 
@@ -36,13 +37,14 @@ export default [
   {
     input: `./src/cannon-es`,
     output: { file: `dist/cannon-es.js`, format: 'esm' },
-    plugins: [json(), resolve({ extensions }), babel(babelOptions), filesize()],
+    plugins: [json(), commonjs(), resolve({ extensions }), babel(babelOptions), filesize()],
   },
   {
     input: `./src/cannon-es`,
     output: { file: `dist/cannon-es.cjs.js`, format: 'cjs' },
     plugins: [
       json(),
+      commonjs(),
       resolve({ extensions }),
       babel(babelOptions),
       replace({

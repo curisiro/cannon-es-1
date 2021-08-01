@@ -19,6 +19,33 @@ import { Cylinder } from '../shapes/Cylinder'
 import type { ContactMaterial } from '../material/ContactMaterial'
 import type { World } from '../world/World'
 
+import { GPU } from 'gpu.js/src'
+const gpu = new GPU()
+const multiplyMatrix = gpu
+  .createKernel(function (a: number[][], b: number[][]) {
+    let sum = 0
+    for (let i = 0; i < 512; i++) {
+      sum += a[this.thread.y][i] * b[i][this.thread.x]
+    }
+    return sum
+  })
+  .setOutput([512, 512])
+
+let a = Array()
+let b = Array()
+for (var i = 0; i < 512; i++) {
+  a.push([])
+  b.push([])
+  for (var j = 0; j < 512; j++) {
+    a[i].push(1)
+    b[i].push(-1)
+  }
+}
+
+const c = multiplyMatrix(a, b) as number[][]
+
+console.log(c)
+
 // Naming rule: based of the order in SHAPE_TYPES,
 // the first part of the method is formed by the
 // shape type that comes before, in the second part
